@@ -43,3 +43,6 @@
 <li>Enable the service using <code>sudo systemctl enable server</code></li>
 <li>Start the service using <code>sudo systemctl start server</code></li>
 </ul>
+
+A lot of prettyness and function will be dependent on cache of jscript - jquery - babel - ajax and fonts inter:woff2 
+so not sure it is failproof as it is designed to be utilised pre-getting online dohh
