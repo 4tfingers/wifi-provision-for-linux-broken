@@ -5,8 +5,8 @@ from wifi.utils import ensure_file_exists
 
 class SchemeWPA(Scheme):
 
-    # interfaces = "/etc/wpa_supplicant/wpa_supplicant-wlan1.conf"
-    interfaces = "/etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+    adaptor = "wlan1"
+    interfaces = "/etc/wpa_supplicant/wpa_supplicant-" + adaptor + ".conf"
 
     def __init__(self, interface, name, options=None):
         self.interface = interface
@@ -51,7 +51,7 @@ class SchemeWPA(Scheme):
         return self.parse_ifup_output(ifup_output)
     def delete(self):
         """
-        Deletes the configuration from the /etc/wpa_supplicant/wpa_supplicant-wlan1.conf file.
+        Deletes the configuration from the /etc/wpa_supplicant/wpa_supplicant-adaptor.conf file.
         """
         content = ''
         with open(self.interfaces, 'r') as f:
