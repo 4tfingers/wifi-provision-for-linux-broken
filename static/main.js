@@ -154,7 +154,7 @@ function SimpleWifiForm() {
                         <input
                             type="text"
                             placeholder="Enter WiFi network name"
-                            value={ssid}
+                            value={ssid} // why ssid when parsed essid
                             onChange={(e) => setSsid(e.target.value)}
                             style={{
                                 width: '100%',
