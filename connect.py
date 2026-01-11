@@ -19,10 +19,9 @@ class SchemeWPA(Scheme):
 
     def __stra__(self):
         options = ''.join("\n    {k}=\"{v}\"".format(k=k, v=v) for k, v in self.options.items())
-        return "country=AU" + "\n" + "update_config=1" + "\n" + "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netde>
+        return "country=AU" + "\n" + "update_config=1" + "\n" + "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" + "\n" + "network={" +" + options + "\n    mode=0" + "\n}\n"
 
     def __str__(self):
-
         for option_name, option_value in self.options.items():
                if option_name == 'ssid':
                    ssid = option_value
