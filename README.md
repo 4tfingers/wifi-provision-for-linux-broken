@@ -1,9 +1,7 @@
 <h1 id="wifi-provision-for-linux">wifi-provision-for-linux</h1>
 <p>This wifi-provision-for-linux is specifically designed to dynamically connect to a WiFi AP using the browser. </p>
-<img src="https://i.imgur.com/rklcvAY.png" alt="wifi-provision-for-linux" />
-<br />
-<br /> 
-<img src="https://i.imgur.com/kJrQWY1.png" alt="screenshot"  style="width:150px;" />
+
+<img src="https://i.imgur.com/kJrQWY1.png" alt="screenshot"  style="width:500px;" />
 <h2 id="usage">Usage</h2>
 <ol>
 <li>Connect to Access point created by the Raspberry Pi.</li>
