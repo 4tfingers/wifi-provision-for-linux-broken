@@ -19,7 +19,6 @@
 <li>Python 3.x</li>
 <li><a href="https://pypi.org/project/wifi/">wifi</a></li>
 <li><a href="https://pypi.org/project/Flask/">flask</a></li>
-<li><a href="https://pypi.org/project/Flask/">wifi</a></li>
 </ul>
 
 <h2 id="howto">How to use</h2>
