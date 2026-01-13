@@ -79,7 +79,7 @@ def get_active_wifi_connection():
     connected_network = "Not Connected"
     # Get the currently connected network
     try:
-        connected_response = subprocess.check_output(['sudo', 'iwgetid', '-r'], text=True)
+        connected_response = subprocess.check_output(['iwgetid', '-r'], text=True)
         connected_network = connected_response.strip()
     except subprocess.CalledProcessError:
         print(f"An error occured running 'iwgetid' for active connection") # for debug
