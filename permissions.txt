@@ -36,6 +36,7 @@ www-data ALL=(ALL) NOPASSWD:/sbin/ifup *
 www-data ALL=(ALL) NOPASSWD:/sbin/ifdown *
 www-data ALL=(ALL) NOPASSWD:/sbin/iw dev*
 www-data ALL=(ALL) NOPASSWD:/sbin/iw reg set*
+www-data ALL=(ALL) NOPASSWD:/sbin/iwgetid -r
 www-data ALL=(ALL) NOPASSWD:/usr/sbin/netplan
 www-data ALL=(ALL) NOPASSWD:/usr/bin/nmap --script=broadcast-dhcp-discover -e [a-zA-Z0-9]*
 www-data ALL=(ALL) NOPASSWD:/usr/bin/vnstat *
