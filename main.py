@@ -6,8 +6,7 @@ import binascii
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__, static_url_path='/static')
-
-_OWN_SSID='APzone' # edit 
+country_code='AU'  # still need to create text box entry for the country default to existing if available
 
 def get_command_location_check(command_name):
     try:
@@ -24,11 +23,28 @@ def get_command_location_check(command_name):
         print(f"Error: The 'which' command was not found in the system's PATH.")
         return None
 
-# Example:
+# Example useage:
 wpa_cli_check = get_command_location_check('wpa_cli')
 hostname_check = get_command_location_check('hostname')
 iwgetid_check = get_command_location_check('iwgetid')
 iw_check = get_command_location_check('iw')
+
+def get_hostapd_ssid(filepath='/etc/hostapd/hostapd.conf'):
+    try:
+        with open(filepath, 'r') as file:
+            for line in file:
+                # Strip whitespace and check if line starts with ssid
+                if line.strip().startswith('ssid='):
+                    # Return the value after 'ssid='
+                    return line.strip().split('ssid=', 1)[1]
+    except FileNotFoundError:
+        #print(f"The hostapd.conf File not found")
+        return "The hostapd.conf File not found"
+    except PermissionError:
+        return "Script doesnt have access to hostapd.conf - Permission denied"
+    return "hostapd.conf SSID not found error"
+
+# Get and print the SSID
 
 
 def reconfigure_wifi(interface='wlan1'):
@@ -37,7 +53,7 @@ def reconfigure_wifi(interface='wlan1'):
     """
     # print(f"Attempting to reconfigure {interface}...") # for debug
     try:
-        # Execute the wpa_cli command as root
+        # Execute the wpa_cli command as root sudo
         result = subprocess.run(
             ['sudo', '/usr/sbin/wpa_cli', '-i', interface, 'reconfigure'],
             check=True,
@@ -80,6 +96,7 @@ def reconfigure_wifi(interface='wlan1'):
     except FileNotFoundError:
         # print("Error: wpa_cli command not found. Ensure wpasupplicant is installed.") # for debug
         return "Error: wpa_cli command not found. Ensure wpasupplicant is installed."
+        
 def get_ssids_manual(file_path='/etc/wpa_supplicant/wpa_supplicant-wlan1.conf.bak'):
     """
     Get a text list of all the SSIDS in the wpa_spplicant config file
@@ -175,9 +192,10 @@ def landing():
         time.sleep(1)
         wifi_list = get_ssids(interface="wlan1")
         time.sleep(1)
-        # removing ownAP from the list - in my situation it's APzone
+        # removing the set ownAP from the list - eg in my situation it's APzone
+        own_ap_ssid = get_hostapd_ssid()  
         if _OWN_SSID in wifi_list:
-            wifi_list.remove(_OWN_SSID)
+            wifi_list.remove(own_ap_ssid)
         # removing currently connected AP from the list
         if connection in wifi_list:
             wifi_list.remove(connection)
@@ -219,9 +237,11 @@ def content():
         iface = iface.read()
         iface = iface.split('\n')
         clean_iface = list(filter(None, iface))
+        # def __init__(self, interface, name, country, options=None):
         scheme = connect.SchemeWPA(
             clean_iface[0],
             ssid,
+            country_code,
             {"ssid": ssid, "psk": password}
         )
         #connection = get_active_wifi_connection()
