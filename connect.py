@@ -11,7 +11,7 @@ from wifi.utils import ensure_file_exists
 
 class SchemeWPA(Scheme):
 
-    def __init__(self, interface, name, options=None):
+    def __init__(self, interface, name, country, options=None):
         self.interface = interface
         self.interfaces = "/etc/wpa_supplicant/wpa_supplicant-" + interface + ".conf.bak"
         self.name = name
@@ -19,7 +19,7 @@ class SchemeWPA(Scheme):
 
     def __stra__(self):
         options = ''.join("\n    {k}=\"{v}\"".format(k=k, v=v) for k, v in self.options.items())
-        return "country=AU" + "\n" + "update_config=1" + "\n" + "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" + "\n" + "network={" +" + options + "\n    mode=0" + "\n}\n"
+        return "country=" + country + "\n" + "update_config=1" + "\n" + "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" + "\n" + "network={" +" + options + "\n    mode=0" + "\n}\n"
 
     def __str__(self):
         for option_name, option_value in self.options.items():
