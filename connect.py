@@ -15,6 +15,7 @@ class SchemeWPA(Scheme):
         self.interface = interface
         self.interfaces = "/etc/wpa_supplicant/wpa_supplicant-" + interface + ".conf.bak"
         self.name = name
+        self.country = country
         self.options = options or {}
 
     def __stra__(self):
