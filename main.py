@@ -7,6 +7,30 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__, static_url_path='/static')
 
+_OWN_SSID='APzone' # edit 
+
+def get_command_location_check(command_name):
+    try:
+        # check_output raises CalledProcessError on non-zero exit status
+        output_bytes = subprocess.check_output(
+            ['which', command_name] 
+        )
+        # Decode the byte string to a regular string and strip whitespace
+        return output_bytes.decode('utf-8').strip()
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Command '{command_name}' not found or an error occurred.")
+        return None
+    except FileNotFoundError:
+        print(f"Error: The 'which' command was not found in the system's PATH.")
+        return None
+
+# Example:
+wpa_cli_check = get_command_location_check('wpa_cli')
+hostname_check = get_command_location_check('hostname')
+iwgetid_check = get_command_location_check('iwgetid')
+iw_check = get_command_location_check('iw')
+
+
 def reconfigure_wifi(interface='wlan1'):
     """
     Make wpa_supplicant reload its configuration file and reconnect.
@@ -15,7 +39,7 @@ def reconfigure_wifi(interface='wlan1'):
     try:
         # Execute the wpa_cli command as root
         result = subprocess.run(
-            ['sudo', 'wpa_cli', '-i', interface, 'reconfigure'],
+            ['sudo', '/usr/sbin/wpa_cli', '-i', interface, 'reconfigure'],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -33,7 +57,7 @@ def reconfigure_wifi(interface='wlan1'):
         try:
             # Use hostname -I or ip addr command to check IP (hostname -I is often simpler)
             ip_addr_result = subprocess.run(
-                ['hostname', '-I'],
+                ['/usr/bin/hostname', '-I'],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -79,7 +103,7 @@ def get_active_wifi_connection():
     connected_network = "Not Connected"
     # Get the currently connected network
     try:
-        connected_response = subprocess.check_output(['/usr/sbin/iwgetid/iwgetid', '-r'], text=True)
+        connected_response = subprocess.check_output(['/usr/sbin/iwgetid', '-r'], text=True)
         connected_network = connected_response.strip()
     except subprocess.CalledProcessError:
         print(f"An error occured running 'iwgetid' for active connection") # for debug
@@ -92,7 +116,7 @@ def get_ssids(interface="wlan1"):
     Runs the 'sudo iw dev <interface> scan' command, filters for SSIDs, and returns a list of unique SSIDs.
     """
     # The command to execute, using shell=True to handle the pipe
-    command = f"sudo iw dev {interface} scan | grep SSID:"
+    command = f"sudo /usr/sbin/iw dev {interface} scan | grep SSID:"
     try:
         # Run the command and capture the output.
         # text=True ensures output is a string (instead of bytes).
@@ -152,8 +176,8 @@ def landing():
         wifi_list = get_ssids(interface="wlan1")
         time.sleep(1)
         # removing ownAP from the list - in my situation it's APzone
-        if 'APzone' in wifi_list:
-            wifi_list.remove('APzone')
+        if _OWN_SSID in wifi_list:
+            wifi_list.remove(_OWN_SSID)
         # removing currently connected AP from the list
         if connection in wifi_list:
             wifi_list.remove(connection)
