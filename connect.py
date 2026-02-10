@@ -42,11 +42,11 @@ class SchemeWPA(Scheme):
         return "\n".join(config_lines)
 
     def __repr__(self):
-        return 'Scheme(interface={interface!r}, name={name!r}, options={options!r}'.format(**vars(self))
+        return 'Scheme(interface={interface!r}, name={name!r}, country={country!r}, options={options!r}'.format(**vars(self))
 
     def save(self):
         """
-        OverWrites the configuration to the :attr:`interfaces` file.
+        OverWrites the configuration to the :attr:`interfaces` file. Need to use if country changes from the existing setup
         """
         if not self.find(self.interface, self.name):
             with open(self.interfaces, 'w') as f:
@@ -68,6 +68,7 @@ class SchemeWPA(Scheme):
         except:
             # print(f"start// \n" + str(self) + "\n" + str(self.interface) + "\n" + str(self.name) + "\n //end")
             print("A find open or write exception occurred")
+            
     def debugin(self):
         """
         Output the file contents to console
